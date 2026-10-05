@@ -7,18 +7,6 @@ import InertiaPlugin from "gsap/InertiaPlugin";
 
 gsap.registerPlugin(SplitText, DrawSVGPlugin, Draggable, InertiaPlugin);
 
-const split = SplitText.create(".main-title", { type: "words", mask: "words" });
-// GSAP Timeline
-const tl = gsap.timeline();
-
-tl.from(".controller-path", {
-  duration: 3,
-  ease: "power3.in",
-  drawSVG: "0% 0%",
-})
-  .from(split.words, { yPercent: 100, ease: "back", stagger: 0.2 })
-  .from(".key-pad-btn", { xPercent: 100, ease: "elastic.in", stagger: 0.2 });
-
 // > ==================================
 // * Elements
 // > ==================================
@@ -32,6 +20,9 @@ const scoreEl = document.querySelector(".score__value");
 const highScoreEl = document.querySelector(".high-score__value");
 const levelInfo = document.querySelector("#level-info");
 
+// > ==================================
+// * Get the top corners
+// > ==================================
 const rect = document.body.getBoundingClientRect();
 
 const rightCornerX = rect.right;
@@ -41,6 +32,8 @@ const rightCornerY = rect.top;
 // * Celebration Function
 // > ==================================
 
+const colors = ["#FF06B5", "#fb8500", "#219ebc", "#9b5de5", "#00f5d4"];
+
 function celebration() {
   confetti({
     position: { x: 0, y: 0 },
@@ -48,7 +41,7 @@ function celebration() {
     size: 1,
     velocity: 200,
     fade: false,
-    color: ["#FF06B5", "#fb8500", "#219ebc", "#9b5de5", "#00f5d4"],
+    colors: colors,
   });
 
   confetti({
@@ -56,13 +49,13 @@ function celebration() {
     size: 1,
     velocity: 200,
     fade: false,
-    color: ["#FF06B5", "#fb8500", "#219ebc", "#9b5de5", "#00f5d4"],
+    colors: colors,
   });
 
   ribbons({
     count: 20,
     fade: false,
-    color: ["#FF06B5", "#fb8500", "#219ebc", "#9b5de5", "#00f5d4"],
+    colors: colors,
   });
 }
 
@@ -119,6 +112,10 @@ gameForm.addEventListener("keydown", function (e) {
   if (e.key === "Enter") e.preventDefault();
 });
 
+// > ==================================
+// * Game Restart Functionality
+// > ==================================
+
 function restartGame() {
   messageEl.textContent = "Can you Guess it?";
   highScore = 0;
@@ -131,10 +128,40 @@ function restartGame() {
   gsap.to(".btn--main", { x: 0, y: 0, ease: "power3.in" });
 }
 
+// > ==================================
+// * GSAP Animations
+// > ==================================
+
+const split = SplitText.create(".main-title", { type: "words", mask: "words" });
+const tl = gsap.timeline();
+
+tl.from(".controller-path", {
+  duration: 2,
+  ease: "power3.in",
+  drawSVG: "0% 0%",
+})
+  .from(".key-pad-btn", {
+    xPercent: 100,
+    ease: "power3.in",
+    autoAlpha: 0,
+    stagger: 0.2,
+  })
+  .from(".plus-mark", {
+    yPercent: 100,
+    rotate: 180,
+    transformOrigin: "center center",
+    ease: "power3.in",
+    autoAlpha: 0,
+  })
+  .from(split.words, { yPercent: 100, ease: "back", stagger: 0.2 });
+
 Draggable.create(".btn--main", {
   bounds: "body",
   inertia: true,
 });
 
+// > ==================================
+// * Event Listeners
+// > ==================================
 checkBtn.addEventListener("click", checkValue);
 restartBtn.addEventListener("click", restartGame);
