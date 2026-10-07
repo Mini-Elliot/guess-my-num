@@ -102,7 +102,6 @@ function checkCondition(actualNum, guessNum) {
 }
 
 function checkValue(e) {
-  e.preventDefault();
   const guess = Number(inputEl.value);
   if (!guess) return (messageEl.textContent = "Not a valid number.");
   checkCondition(randomNumGenerator, guess);
