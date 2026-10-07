@@ -157,6 +157,7 @@ tl.from(".controller-path", {
 Draggable.create(".btn--main", {
   bounds: "body",
   inertia: true,
+  onClick: checkValue,
 });
 
 // > ==================================
